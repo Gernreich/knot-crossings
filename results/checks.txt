@@ -1,0 +1,24 @@
+The index names 23 drawings, from 24 to 122.
+
+Each name, and the groups its drawings fall in:
+
+  square knot: 24, 28, 56, 60, 98, 122 -> group 7 (one group)
+  sheet bend: 26, 29, 58, 61, 99, 103, 120 -> group 8, 9 (a group and its mirror)
+  whatnot: 73, 101 -> group 10, 13 (2 groups)
+  single carrick bend (unknown): 74, 106 -> group 11, 14 (2 groups)
+  single carrick bend (reformed constrictor): 77, 105, 109 -> group 12, 15 (2 groups)
+  single carrick bend: 114 -> group 16 (one group)
+  the carrick bend: 117 -> group 17 (one group)
+  carrick bend (unknown): 118 -> group 18 (one group)
+
+Drawings up to 122 in a named group but not in the index:
+
+  none
+
+Names given to drawings that are mirror images of each other:
+
+  73 whatnot  <->  109 single carrick bend (Reformed constrictor)
+  74 single carrick bend (unknown type)  <->  118 Carrack bend (unknown)
+  106 single carrack bend (unknown)  <->  114 single carrack bend
+
+Alternating drawings (over, under, over ... along both ropes): 117, 138

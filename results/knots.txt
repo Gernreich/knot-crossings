@@ -1,0 +1,263 @@
+Every drawing. Crossing k is circled when bit k-1 of the number is 1.
+Over and under are read along each rope from its start, the first
+pass going over unless circled. lk = linking number of the two ropes
+closed on themselves. Group = knot, ends allowed to twist (groups.txt).
+
+  n  circled          1st rope  2nd rope  lk  group  name on the page
+
+  0  -                OOOOOOUO  UOUUUUUU   0      1
+  1  1                OOOUOOUO  OOUUUUUU   1      2  "overhand knot" (on the drawing)
+  2  2                OOOOUOUO  UOUUUUUO  -1      2
+  3  1,2              OOOUUOUO  OOUUUUUO   0      1
+  4  3                OOOOOOUO  UUUUUUOU   0      1
+  5  1,3              OOOUOOUO  OUUUUUOU   1      2  "overhand" (on the drawing)
+  6  2,3              OOOOUOUO  UUUUUUOO  -1      2
+  7  1,2,3            OOOUUOUO  OUUUUUOO   0      1
+  8  4                OOUOOOUO  UOUUUOUU   1      2
+  9  1,4              OOUUOOUO  OOUUUOUU   2      3  "overhand" (on the drawing)
+ 10  2,4              OOUOUOUO  UOUUUOUO   0      4
+ 11  1,2,4            OOUUUOUO  OOUUUOUO   1      2
+ 12  3,4              OOUOOOUO  UUUUUOOU   1      2
+ 13  1,3,4            OOUUOOUO  OUUUUOOU   2      5  "overhand" (on the drawing)
+ 14  2,3,4            OOUOUOUO  UUUUUOOO   0      1
+ 15  1,2,3,4          OOUUUOUO  OUUUUOOO   1      2
+ 16  5                OOOOOUUO  UOOUUUUU  -1      2
+ 17  1,5              OOOUOUUO  OOOUUUUU   0      1
+ 18  2,5              OOOOUUUO  UOOUUUUO  -2      3  "overhand" (on the drawing)
+ 19  1,2,5            OOOUUUUO  OOOUUUUO  -1      2
+ 20  3,5              OOOOOUUO  UUOUUUOU  -1      2
+ 21  1,3,5            OOOUOUUO  OUOUUUOU   0      6
+ 22  2,3,5            OOOOUUUO  UUOUUUOO  -2      5
+ 23  1,2,3,5          OOOUUUUO  OUOUUUOO  -1      2
+ 24  4,5              OOUOOUUO  UOOUUOUU   0      7  square knot
+ 25  1,4,5            OOUUOUUO  OOOUUOUU   1      2
+ 26  2,4,5            OOUOUUUO  UOOUUOUO  -1      8  sheet bend
+ 27  1,2,4,5          OOUUUUUO  OOOUUOUO   0      1
+ 28  3,4,5            OOUOOUUO  UUOUUOOU   0      7  square knot
+ 29  1,3,4,5          OOUUOUUO  OUOUUOOU   1      9  sheet bend
+ 30  2,3,4,5          OOUOUUUO  UUOUUOOO  -1      2
+ 31  1,2,3,4,5        OOUUUUUO  OUOUUOOO   0      1
+ 32  6                OUOOOOOO  UOUUUUUU   0      1
+ 33  1,6              OUOUOOOO  OOUUUUUU   1      2
+ 34  2,6              OUOOUOOO  UOUUUUUO  -1      2
+ 35  1,2,6            OUOUUOOO  OOUUUUUO   0      1
+ 36  3,6              OUOOOOOO  UUUUUUOU   0      1
+ 37  1,3,6            OUOUOOOO  OUUUUUOU   1      2
+ 38  2,3,6            OUOOUOOO  UUUUUUOO  -1      2
+ 39  1,2,3,6          OUOUUOOO  OUUUUUOO   0      1
+ 40  4,6              OUUOOOOO  UOUUUOUU   1      2
+ 41  1,4,6            OUUUOOOO  OOUUUOUU   2      3
+ 42  2,4,6            OUUOUOOO  UOUUUOUO   0      4
+ 43  1,2,4,6          OUUUUOOO  OOUUUOUO   1      2
+ 44  3,4,6            OUUOOOOO  UUUUUOOU   1      2
+ 45  1,3,4,6          OUUUOOOO  OUUUUOOU   2      5
+ 46  2,3,4,6          OUUOUOOO  UUUUUOOO   0      1
+ 47  1,2,3,4,6        OUUUUOOO  OUUUUOOO   1      2
+ 48  5,6              OUOOOUOO  UOOUUUUU  -1      2
+ 49  1,5,6            OUOUOUOO  OOOUUUUU   0      1
+ 50  2,5,6            OUOOUUOO  UOOUUUUO  -2      3
+ 51  1,2,5,6          OUOUUUOO  OOOUUUUO  -1      2
+ 52  3,5,6            OUOOOUOO  UUOUUUOU  -1      2
+ 53  1,3,5,6          OUOUOUOO  OUOUUUOU   0      6
+ 54  2,3,5,6          OUOOUUOO  UUOUUUOO  -2      5
+ 55  1,2,3,5,6        OUOUUUOO  OUOUUUOO  -1      2
+ 56  4,5,6            OUUOOUOO  UOOUUOUU   0      7  square knot
+ 57  1,4,5,6          OUUUOUOO  OOOUUOUU   1      2
+ 58  2,4,5,6          OUUOUUOO  UOOUUOUO  -1      8  sheet bend
+ 59  1,2,4,5,6        OUUUUUOO  OOOUUOUO   0      1
+ 60  3,4,5,6          OUUOOUOO  UUOUUOOU   0      7  square knot
+ 61  1,3,4,5,6        OUUUOUOO  OUOUUOOU   1      9  sheet bend
+ 62  2,3,4,5,6        OUUOUUOO  UUOUUOOO  -1      2
+ 63  1,2,3,4,5,6      OUUUUUOO  OUOUUOOO   0      1
+ 64  7                OOOOOOUU  UOUUOUUU   1      2
+ 65  1,7              OOOUOOUU  OOUUOUUU   2      3
+ 66  2,7              OOOOUOUU  UOUUOUUO   0      4
+ 67  1,2,7            OOOUUOUU  OOUUOUUO   1      2
+ 68  3,7              OOOOOOUU  UUUUOUOU   1      2
+ 69  1,3,7            OOOUOOUU  OUUUOUOU   2      5
+ 70  2,3,7            OOOOUOUU  UUUUOUOO   0      1
+ 71  1,2,3,7          OOOUUOUU  OUUUOUOO   1      2
+ 72  4,7              OOUOOOUU  UOUUOOUU   2      3
+ 73  1,4,7            OOUUOOUU  OOUUOOUU   3     10  whatnot
+ 74  2,4,7            OOUOUOUU  UOUUOOUO   1     11  single carrick bend (unknown type)
+ 75  1,2,4,7          OOUUUOUU  OOUUOOUO   2      3
+ 76  3,4,7            OOUOOOUU  UUUUOOOU   2      3
+ 77  1,3,4,7          OOUUOOUU  OUUUOOOU   3     12  single carrick bend (Reformed constrictor knot)
+ 78  2,3,4,7          OOUOUOUU  UUUUOOOO   1      2
+ 79  1,2,3,4,7        OOUUUOUU  OUUUOOOO   2      3
+ 80  5,7              OOOOOUUU  UOOUOUUU   0      1
+ 81  1,5,7            OOOUOUUU  OOOUOUUU   1      2
+ 82  2,5,7            OOOOUUUU  UOOUOUUO  -1      2
+ 83  1,2,5,7          OOOUUUUU  OOOUOUUO   0      1
+ 84  3,5,7            OOOOOUUU  UUOUOUOU   0      1
+ 85  1,3,5,7          OOOUOUUU  OUOUOUOU   1      2
+ 86  2,3,5,7          OOOOUUUU  UUOUOUOO  -1      2
+ 87  1,2,3,5,7        OOOUUUUU  OUOUOUOO   0      1
+ 88  4,5,7            OOUOOUUU  UOOUOOUU   1      2
+ 89  1,4,5,7          OOUUOUUU  OOOUOOUU   2      3
+ 90  2,4,5,7          OOUOUUUU  UOOUOOUO   0      4
+ 91  1,2,4,5,7        OOUUUUUU  OOOUOOUO   1      2
+ 92  3,4,5,7          OOUOOUUU  UUOUOOOU   1      2
+ 93  1,3,4,5,7        OOUUOUUU  OUOUOOOU   2      5
+ 94  2,3,4,5,7        OOUOUUUU  UUOUOOOO   0      1
+ 95  1,2,3,4,5,7      OOUUUUUU  OUOUOOOO   1      2
+ 96  6,7              OUOOOOOU  UOUUOUUU   1      2
+ 97  1,6,7            OUOUOOOU  OOUUOUUU   2      5
+ 98  2,6,7            OUOOUOOU  UOUUOUUO   0      7  square knot
+ 99  1,2,6,7          OUOUUOOU  OOUUOUUO   1      9  Sheet bend
+100  3,6,7            OUOOOOOU  UUUUOUOU   1      2
+101  1,3,6,7          OUOUOOOU  OUUUOUOU   2     13  whatnot
+102  2,3,6,7          OUOOUOOU  UUUUOUOO   0      6
+103  1,2,3,6,7        OUOUUOOU  OUUUOUOO   1      9  Sheet bend
+104  4,6,7            OUUOOOOU  UOUUOOUU   2      5
+105  1,4,6,7          OUUUOOOU  OOUUOOUU   3     12  single carrick bend (Reformed constrictor knot)
+106  2,4,6,7          OUUOUOOU  UOUUOOUO   1     14  single carrack bend (unknown)
+107  1,2,4,6,7        OUUUUOOU  OOUUOOUO   2      5
+108  3,4,6,7          OUUOOOOU  UUUUOOOU   2      5
+109  1,3,4,6,7        OUUUOOOU  OUUUOOOU   3     15  single carrick bend (Reformed constrictor)
+110  2,3,4,6,7        OUUOUOOU  UUUUOOOO   1      2
+111  1,2,3,4,6,7      OUUUUOOU  OUUUOOOO   2      5
+112  5,6,7            OUOOOUOU  UOOUOUUU   0      6
+113  1,5,6,7          OUOUOUOU  OOOUOUUU   1      2
+114  2,5,6,7          OUOOUUOU  UOOUOUUO  -1     16  single carrack bend
+115  1,2,5,6,7        OUOUUUOU  OOOUOUUO   0      6
+116  3,5,6,7          OUOOOUOU  UUOUOUOU   0      6
+117  1,3,5,6,7        OUOUOUOU  OUOUOUOU   1     17  The Carrack bend
+118  2,3,5,6,7        OUOOUUOU  UUOUOUOO  -1     18  Carrack bend (unknown)
+119  1,2,3,5,6,7      OUOUUUOU  OUOUOUOO   0      6
+120  4,5,6,7          OUUOOUOU  UOOUOOUU   1      9  Sheet bend
+121  1,4,5,6,7        OUUUOUOU  OOOUOOUU   2      5
+122  2,4,5,6,7        OUUOUUOU  UOOUOOUO   0      7  square knot
+123  1,2,4,5,6,7      OUUUUUOU  OOOUOOUO   1      2
+124  3,4,5,6,7        OUUOOUOU  UUOUOOOU   1      9
+125  1,3,4,5,6,7      OUUUOUOU  OUOUOOOU   2     13
+126  2,3,4,5,6,7      OUUOUUOU  UUOUOOOO   0      6
+127  1,2,3,4,5,6,7    OUUUUUOU  OUOUOOOO   1      2
+128  8                UOOOOOUO  UOUOUUUU  -1      2
+129  1,8              UOOUOOUO  OOUOUUUU   0      4
+130  2,8              UOOOUOUO  UOUOUUUO  -2     19
+131  1,2,8            UOOUUOUO  OOUOUUUO  -1      8
+132  3,8              UOOOOOUO  UUUOUUOU  -1      2
+133  1,3,8            UOOUOOUO  OUUOUUOU   0      7
+134  2,3,8            UOOOUOUO  UUUOUUOO  -2      3
+135  1,2,3,8          UOOUUOUO  OUUOUUOO  -1      8
+136  4,8              UOUOOOUO  UOUOUOUU   0      4
+137  1,4,8            UOUUOOUO  OOUOUOUU   1     11
+138  2,4,8            UOUOUOUO  UOUOUOUO  -1     20
+139  1,2,4,8          UOUUUOUO  OOUOUOUO   0      4
+140  3,4,8            UOUOOOUO  UUUOUOOU   0      4
+141  1,3,4,8          UOUUOOUO  OUUOUOOU   1     14
+142  2,3,4,8          UOUOUOUO  UUUOUOOO  -1      2
+143  1,2,3,4,8        UOUUUOUO  OUUOUOOO   0      4
+144  5,8              UOOOOUUO  UOOOUUUU  -2      3
+145  1,5,8            UOOUOUUO  OOOOUUUU  -1      2
+146  2,5,8            UOOOUUUO  UOOOUUUO  -3     10
+147  1,2,5,8          UOOUUUUO  OOOOUUUO  -2      3
+148  3,5,8            UOOOOUUO  UUOOUUOU  -2      3
+149  1,3,5,8          UOOUOUUO  OUOOUUOU  -1     16
+150  2,3,5,8          UOOOUUUO  UUOOUUOO  -3     12
+151  1,2,3,5,8        UOOUUUUO  OUOOUUOO  -2      3
+152  4,5,8            UOUOOUUO  UOOOUOUU  -1      8
+153  1,4,5,8          UOUUOUUO  OOOOUOUU   0      4
+154  2,4,5,8          UOUOUUUO  UOOOUOUO  -2     19
+155  1,2,4,5,8        UOUUUUUO  OOOOUOUO  -1      2
+156  3,4,5,8          UOUOOUUO  UUOOUOOU  -1      8
+157  1,3,4,5,8        UOUUOUUO  OUOOUOOU   0      7
+158  2,3,4,5,8        UOUOUUUO  UUOOUOOO  -2      3
+159  1,2,3,4,5,8      UOUUUUUO  OUOOUOOO  -1      2
+160  6,8              UUOOOOOO  UOUOUUUU  -1      2
+161  1,6,8            UUOUOOOO  OOUOUUUU   0      1
+162  2,6,8            UUOOUOOO  UOUOUUUO  -2      3
+163  1,2,6,8          UUOUUOOO  OOUOUUUO  -1      2
+164  3,6,8            UUOOOOOO  UUUOUUOU  -1      2
+165  1,3,6,8          UUOUOOOO  OUUOUUOU   0      6
+166  2,3,6,8          UUOOUOOO  UUUOUUOO  -2      5
+167  1,2,3,6,8        UUOUUOOO  OUUOUUOO  -1      2
+168  4,6,8            UUUOOOOO  UOUOUOUU   0      1
+169  1,4,6,8          UUUUOOOO  OOUOUOUU   1      2
+170  2,4,6,8          UUUOUOOO  UOUOUOUO  -1      2
+171  1,2,4,6,8        UUUUUOOO  OOUOUOUO   0      1
+172  3,4,6,8          UUUOOOOO  UUUOUOOU   0      1
+173  1,3,4,6,8        UUUUOOOO  OUUOUOOU   1      2
+174  2,3,4,6,8        UUUOUOOO  UUUOUOOO  -1      2
+175  1,2,3,4,6,8      UUUUUOOO  OUUOUOOO   0      1
+176  5,6,8            UUOOOUOO  UOOOUUUU  -2      5
+177  1,5,6,8          UUOUOUOO  OOOOUUUU  -1      2
+178  2,5,6,8          UUOOUUOO  UOOOUUUO  -3     12
+179  1,2,5,6,8        UUOUUUOO  OOOOUUUO  -2      5
+180  3,5,6,8          UUOOOUOO  UUOOUUOU  -2      5
+181  1,3,5,6,8        UUOUOUOO  OUOOUUOU  -1     18
+182  2,3,5,6,8        UUOOUUOO  UUOOUUOO  -3     15
+183  1,2,3,5,6,8      UUOUUUOO  OUOOUUOO  -2      5
+184  4,5,6,8          UUUOOUOO  UOOOUOUU  -1      2
+185  1,4,5,6,8        UUUUOUOO  OOOOUOUU   0      1
+186  2,4,5,6,8        UUUOUUOO  UOOOUOUO  -2      3
+187  1,2,4,5,6,8      UUUUUUOO  OOOOUOUO  -1      2
+188  3,4,5,6,8        UUUOOUOO  UUOOUOOU  -1      2
+189  1,3,4,5,6,8      UUUUOUOO  OUOOUOOU   0      6
+190  2,3,4,5,6,8      UUUOUUOO  UUOOUOOO  -2      5
+191  1,2,3,4,5,6,8    UUUUUUOO  OUOOUOOO  -1      2
+192  7,8              UOOOOOUU  UOUOOUUU   0      1
+193  1,7,8            UOOUOOUU  OOUOOUUU   1      2
+194  2,7,8            UOOOUOUU  UOUOOUUO  -1      8
+195  1,2,7,8          UOOUUOUU  OOUOOUUO   0      7
+196  3,7,8            UOOOOOUU  UUUOOUOU   0      1
+197  1,3,7,8          UOOUOOUU  OUUOOUOU   1      9
+198  2,3,7,8          UOOOUOUU  UUUOOUOO  -1      2
+199  1,2,3,7,8        UOOUUOUU  OUUOOUOO   0      7
+200  4,7,8            UOUOOOUU  UOUOOOUU   1      2
+201  1,4,7,8          UOUUOOUU  OOUOOOUU   2      3
+202  2,4,7,8          UOUOUOUU  UOUOOOUO   0      4
+203  1,2,4,7,8        UOUUUOUU  OOUOOOUO   1      2
+204  3,4,7,8          UOUOOOUU  UUUOOOOU   1      2
+205  1,3,4,7,8        UOUUOOUU  OUUOOOOU   2      5
+206  2,3,4,7,8        UOUOUOUU  UUUOOOOO   0      1
+207  1,2,3,4,7,8      UOUUUOUU  OUUOOOOO   1      2
+208  5,7,8            UOOOOUUU  UOOOOUUU  -1      2
+209  1,5,7,8          UOOUOUUU  OOOOOUUU   0      1
+210  2,5,7,8          UOOOUUUU  UOOOOUUO  -2      3
+211  1,2,5,7,8        UOOUUUUU  OOOOOUUO  -1      2
+212  3,5,7,8          UOOOOUUU  UUOOOUOU  -1      2
+213  1,3,5,7,8        UOOUOUUU  OUOOOUOU   0      6
+214  2,3,5,7,8        UOOOUUUU  UUOOOUOO  -2      5
+215  1,2,3,5,7,8      UOOUUUUU  OUOOOUOO  -1      2
+216  4,5,7,8          UOUOOUUU  UOOOOOUU   0      1
+217  1,4,5,7,8        UOUUOUUU  OOOOOOUU   1      2
+218  2,4,5,7,8        UOUOUUUU  UOOOOOUO  -1      2
+219  1,2,4,5,7,8      UOUUUUUU  OOOOOOUO   0      1
+220  3,4,5,7,8        UOUOOUUU  UUOOOOOU   0      1
+221  1,3,4,5,7,8      UOUUOUUU  OUOOOOOU   1      2
+222  2,3,4,5,7,8      UOUOUUUU  UUOOOOOO  -1      2
+223  1,2,3,4,5,7,8    UOUUUUUU  OUOOOOOO   0      1
+224  6,7,8            UUOOOOOU  UOUOOUUU   0      1
+225  1,6,7,8          UUOUOOOU  OOUOOUUU   1      2
+226  2,6,7,8          UUOOUOOU  UOUOOUUO  -1      8
+227  1,2,6,7,8        UUOUUOOU  OOUOOUUO   0      7
+228  3,6,7,8          UUOOOOOU  UUUOOUOU   0      1
+229  1,3,6,7,8        UUOUOOOU  OUUOOUOU   1      9
+230  2,3,6,7,8        UUOOUOOU  UUUOOUOO  -1      2
+231  1,2,3,6,7,8      UUOUUOOU  OUUOOUOO   0      7
+232  4,6,7,8          UUUOOOOU  UOUOOOUU   1      2
+233  1,4,6,7,8        UUUUOOOU  OOUOOOUU   2      3
+234  2,4,6,7,8        UUUOUOOU  UOUOOOUO   0      4
+235  1,2,4,6,7,8      UUUUUOOU  OOUOOOUO   1      2
+236  3,4,6,7,8        UUUOOOOU  UUUOOOOU   1      2
+237  1,3,4,6,7,8      UUUUOOOU  OUUOOOOU   2      5
+238  2,3,4,6,7,8      UUUOUOOU  UUUOOOOO   0      1
+239  1,2,3,4,6,7,8    UUUUUOOU  OUUOOOOO   1      2
+240  5,6,7,8          UUOOOUOU  UOOOOUUU  -1      2
+241  1,5,6,7,8        UUOUOUOU  OOOOOUUU   0      1
+242  2,5,6,7,8        UUOOUUOU  UOOOOUUO  -2      3
+243  1,2,5,6,7,8      UUOUUUOU  OOOOOUUO  -1      2
+244  3,5,6,7,8        UUOOOUOU  UUOOOUOU  -1      2
+245  1,3,5,6,7,8      UUOUOUOU  OUOOOUOU   0      6
+246  2,3,5,6,7,8      UUOOUUOU  UUOOOUOO  -2      5
+247  1,2,3,5,6,7,8    UUOUUUOU  OUOOOUOO  -1      2
+248  4,5,6,7,8        UUUOOUOU  UOOOOOUU   0      1
+249  1,4,5,6,7,8      UUUUOUOU  OOOOOOUU   1      2
+250  2,4,5,6,7,8      UUUOUUOU  UOOOOOUO  -1      2
+251  1,2,4,5,6,7,8    UUUUUUOU  OOOOOOUO   0      1
+252  3,4,5,6,7,8      UUUOOUOU  UUOOOOOU   0      1
+253  1,3,4,5,6,7,8    UUUUOUOU  OUOOOOOU   1      2
+254  2,3,4,5,6,7,8    UUUOUUOU  UUOOOOOO  -1      2
+255  1,2,3,4,5,6,7,8  UUUUUUOU  OUOOOOOO   0      1

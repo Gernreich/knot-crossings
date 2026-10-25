@@ -1,0 +1,101 @@
+Each group holds the drawings whose Kauffman brackets agree once the
+ends of a rope may be twisted about each other. Different brackets
+prove different knots; the same bracket does not prove the same knot.
+Mirror = the group of 255 - n, every crossing turned over.
+
+Group 1: 44 drawings, mirror itself, |lk| 0
+    0   3   4   7  14  17  27  31  32  35  36  39  46  49  59  63
+   70  80  83  84  87  94 161 168 171 172 175 185 192 196 206 209
+  216 219 220 223 224 228 238 241 248 251 252 255
+
+Group 2: 94 drawings, mirror itself, |lk| 1
+  named "overhand knot" (1, drawing)
+  named "overhand" (5, drawing)
+    1   2   5   6   8  11  12  15  16  19  20  23  25  30  33  34
+   37  38  40  43  44  47  48  51  52  55  57  62  64  67  68  71
+   78  81  82  85  86  88  91  92  95  96 100 110 113 123 127 128
+  132 142 145 155 159 160 163 164 167 169 170 173 174 177 184 187
+  188 191 193 198 200 203 204 207 208 211 212 215 217 218 221 222
+  225 230 232 235 236 239 240 243 244 247 249 250 253 254
+
+Group 3: 22 drawings, mirror group 5, |lk| 2
+  named "overhand" (9, drawing)
+  named "overhand" (18, drawing)
+    9  18  41  50  65  72  75  76  79  89 134 144 147 148 151 158
+  162 186 201 210 233 242
+
+Group 4: 12 drawings, mirror group 6, |lk| 0
+   10  42  66  90 129 136 139 140 143 153 202 234
+
+Group 5: 22 drawings, mirror group 3, |lk| 2
+  named "overhand" (13, drawing)
+   13  22  45  54  69  93  97 104 107 108 111 121 166 176 179 180
+  183 190 205 214 237 246
+
+Group 6: 12 drawings, mirror group 4, |lk| 0
+   21  53 102 112 115 116 119 126 165 189 213 245
+
+Group 7: 12 drawings, mirror itself, |lk| 0
+  named square knot (24)
+  named square knot (28)
+  named square knot (56)
+  named square knot (60)
+  named square knot (98)
+  named square knot (122)
+   24  28  56  60  98 122 133 157 195 199 227 231
+
+Group 8: 8 drawings, mirror group 9, |lk| 1
+  named sheet bend (26)
+  named sheet bend (58)
+   26  58 131 135 152 156 194 226
+
+Group 9: 8 drawings, mirror group 8, |lk| 1
+  named sheet bend (29)
+  named sheet bend (61)
+  named Sheet bend (99)
+  named Sheet bend (103)
+  named Sheet bend (120)
+   29  61  99 103 120 124 197 229
+
+Group 10: 2 drawings, mirror group 15, |lk| 3
+  named whatnot (73)
+   73 146
+
+Group 11: 2 drawings, mirror group 18, |lk| 1
+  named single carrick bend (unknown type) (74)
+   74 137
+
+Group 12: 4 drawings, mirror itself, |lk| 3
+  named single carrick bend (Reformed constrictor knot) (77)
+  named single carrick bend (Reformed constrictor knot) (105)
+   77 105 150 178
+
+Group 13: 2 drawings, mirror group 19, |lk| 2
+  named whatnot (101)
+  101 125
+
+Group 14: 2 drawings, mirror group 16, |lk| 1
+  named single carrack bend (unknown) (106)
+  106 141
+
+Group 15: 2 drawings, mirror group 10, |lk| 3
+  named single carrick bend (Reformed constrictor) (109)
+  109 182
+
+Group 16: 2 drawings, mirror group 14, |lk| 1
+  named single carrack bend (114)
+  114 149
+
+Group 17: 1 drawing, mirror group 20, |lk| 1, alternating
+  named The Carrack bend (117)
+  117
+
+Group 18: 2 drawings, mirror group 11, |lk| 1
+  named Carrack bend (unknown) (118)
+  118 181
+
+Group 19: 2 drawings, mirror group 13, |lk| 2
+  130 154
+
+Group 20: 1 drawing, mirror group 17, |lk| 1, alternating
+  138

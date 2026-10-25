@@ -1,0 +1,48 @@
+Sheets 1 to 3 of the drawings (scan pages 3, 5 and 7), read with the numbers
+upright. Every drawing is the same two strands with the same 8 crossings,
+drawn freehand, with small circles on some crossings. Only what is written or
+marked beside the drawings is transcribed here; the circles are the binary
+digits of each drawing's number.
+
+Key (scan page 3, first row, left)
+  A scribbled-out first attempt, then the template: one strand from a circle
+  marked "2nd" (top left) to an arrow (top right), one from a circle marked
+  "1st" (bottom right) to an arrow (bottom left), crossings numbered 1 to 8.
+  Under the first row, the crossing numbers in circles, from left to right:
+  8 7 6 5 4 3 2 1
+
+Drawings 0 to 83 (scan page 3)
+  0    circled in green
+  1    "overhand knot"
+  5    "overhand"
+  9    "overhand"
+  10   a word scribbled out in ink
+  13   "overhand"
+  18   "overhand", with an arrow to a crossing
+  24   boxed in green, "square knot"
+  26   boxed in green, "sheet bend"
+  30   a small mark beside it, like a triangle
+  40   a small mark beside it, like a triangle
+  50   a small mark beside it, unclear
+       a drawing between 72 and 73, unnumbered, covered with correction fluid
+       a drawing between 76 and 77, unnumbered, scribbled out
+  78, 80, 81   one crossing each covered with correction fluid and redrawn
+       as a blue X
+
+Drawings 84 to 203 (scan page 5)
+  90, 128, 129, 145, 154, 166, 167, 203   crossings covered with correction
+       fluid and redrawn in blue
+  110, 111, 112, 113, 141, 142, 143, 144   numbers rewritten in blue on
+       correction fluid
+  133, 135, 136, 137, 138, 139, 140   numbers written over
+
+Drawings 204 to 255 (scan page 7)
+  240, 241, 242, 243, 244   one crossing each covered with correction fluid
+       and redrawn as a blue X
+
+Ticks beside the numbers
+  0           none (circled instead)
+  1 to 27     green (24 and 26 are boxed instead)
+  28 to 116   purple
+  117 to 123  black
+  124 to 255  none
