@@ -64,6 +64,51 @@ the same knot. The 256 drawings fall into 20 groups.
 `results/checks.txt` holds the full comparison, `results/groups.txt` every
 group, and `results/knots.txt` every drawing.
 
+## Closing the ends
+
+A rope with loose ends can always be untied, so to ask whether a drawing is
+really knotted its four ends have to be joined. They lie round the outside of
+the drawing, and two ways of joining them add no crossing: each rope's end
+back to its own start (two loops, a link), or each rope's end on to the other
+rope's start (one loop, a knot). `knot_crossings.py` closes every drawing
+both ways and names what comes out by its Jones polynomial, which differs
+between every knot and link that turns up. It also works out the Alexander
+polynomial from the Wirtinger presentation, and the two must agree on the
+determinant, |Δ(−1)| = |V(−1)|. They agree for all 512. Every name was also
+checked with SnapPy, which is not needed to run the script.
+
+| Own ends joined | Drawings | | Ends joined across | Drawings |
+|---|---:|---|---|---:|
+| unlink | 56 | | unknot | 88 |
+| Hopf link (L2a1) | 110 | | trefoil 3₁, either hand | 72 |
+| Solomon link (L4a1) | 44 | | 5₂, either hand | 32 |
+| Whitehead link (L5a1) | 24 | | 5₁, either hand | 16 |
+| L6a1, L6a2, L6a3, L7a5, L7a6 | 4 each | | 6₃ | 16 |
+| L8a8 | 2 | | 8₂₀, either hand | 16 |
+| | | | square knot 3₁ # 3₁* | 8 |
+| | | | figure-eight 4₁ | 4 |
+| | | | 8₁₈, the Carrick mat | 2 |
+| | | | 8₁₉, the (3,4) torus knot, either hand | 2 |
+
+- **The Carrick bend closes to the Carrick mat.** 117 joined across is
+  8₁₈, the 3-lead 4-bight Turk's head; joined on itself it is the link L8a8.
+  Only 117 and its mirror image 138 reach 8 crossings in both closures.
+- **The square knot comes apart, the sheet bend does not.** Every square knot
+  in the index gives two unlinked loops when each rope is closed on itself;
+  every sheet bend gives a Hopf link.
+- **One name, different closures.** An index name belongs to the knot in the
+  hand, with its ends free to turn, but a closure depends on how the ends lie.
+  Square knots 28, 56, 98 and 122 close across to the square knot, but 24 and
+  60 close to 8₂₀. 8₂₀ has the same Alexander polynomial and determinant as the
+  square knot, and only the Jones polynomial tells them apart.
+- **The reformed constrictor again.** 77 and 105 close to L6a2 and 5₁, and
+  109 to L6a3 and the trefoil, a second sign that the one name covers two
+  knots.
+
+`results/closures.txt` lists every knot and link with its polynomials and
+drawings, and every named drawing's two closures. `results/knots.txt` gives
+both for every drawing.
+
 ## What is here
 
 | Path | Contents |
