@@ -39,16 +39,60 @@ being turned about each other, as they can be in the hand. Different brackets
 prove different knots; the same bracket strongly suggests, but does not prove,
 the same knot. The 256 drawings fall into 20 groups.
 
-| Index name | Drawings | Groups |
+| Index name | Drawings | Groups | In Ashley |
+|---|---|---|---|
+| square knot | 24, 28, 56, 60, 98, 122 | one group, its own mirror image (as the square knot is) | Reef Knot, #1402; Thief Knot, #1207, with the other lead |
+| sheet bend | 26, 29, 58, 61, 99, 103, 120 | a group and its mirror image | Sheet Bend, #1431 |
+| single carrick bend (reformed constrictor) | 77, 105, 109 | two different groups; 109 resolved to whatnot | Single Carrick Bend, #1445 (77, 105) |
+| single carrick bend (unknown) | 74, 106 | two different groups | Single Carrick Bend, #1443 or #1444 |
+| single carrick bend | 114 | one group | Single Carrick Bend, #1443 or #1444 |
+| The Carrick bend | 117 | one group; alternating, like its mirror image 138 | Carrick Bend, #1439 |
+| Carrick bend (unknown) | 118 | one group; resolved to single carrick bend | Single Carrick Bend, #1443 or #1444 (mirror of 74) |
+| whatnot | 73, 101 | two different groups | Whatnot, #1406 or #1407; Granny Knot, #1405, with the other lead |
+
+*The Ashley Book of Knots* (1944) works from the same diagram: Ashley draws
+the reef knot, sheet bend, Carrick bend and granny knot on it (#1549–1552)
+and notes the 256 over-and-under arrangements an eight-crossing knot allows.
+In 2025 Eric (NautiKnots on the International Guild of Knot Tyers forum)
+tied every one, with the standing ends on the same side and on opposite
+sides, and named each bend that held from Ashley:
+[Bends Based on the Carrick Bend Diagram](https://discourse.igkt.net/t/bends-based-on-the-carrick-bend-diagram/6260).
+The "In Ashley" column and the names below are matched to these drawings from
+that thread. "Reformed constrictor" is not Ashley's name.
+
+Eric's crossings A–H are crossings 6, 1, 5, 8, 7, 4, 3, 2 of the key. The
+figures of the Thief Knot (#1207), the Carrick Bend (#1439) and the third
+Single Carrick Bend (#1445), read crossing by crossing, come out as drawings
+195/199/227/231, 138 and 117, and 178 and 77, each in the group already found
+for it. The other figures no longer load, so the rest are matched by
+elimination from Eric's counts (three Single Carrick Bends, two Whatnots, the
+Whatnot tied 8 ways, the Thief Knot 12). The total agrees too: 100 of the 512
+bends held, and groups 1–6 here hold 206 drawings, leaving 50 knotted
+drawings, 100 with both leads. Moving a standing end changes how the knot is
+pulled, not the drawing, so one drawing can carry a name for each lead:
+
+| Groups | Ashley | Other names (credit) |
 |---|---|---|
-| square knot | 24, 28, 56, 60, 98, 122 | one group, its own mirror image (as the square knot is) |
-| sheet bend | 26, 29, 58, 61, 99, 103, 120 | a group and its mirror image |
-| single carrick bend (reformed constrictor) | 77, 105, 109 | two different groups |
-| single carrick bend (unknown) | 74, 106 | two different groups |
-| single carrick bend | 114 | one group |
-| The Carrick bend | 117 | one group; alternating, like its mirror image 138 |
-| Carrick bend (unknown) | 118 | one group |
-| whatnot | 73, 101 | two different groups |
+| 7 (square knot) | Reef Knot, #1402 | Thief Knot, #1207, ends on opposite sides (Eric) |
+| 8, 9 (sheet bend) | Sheet Bend, #1431 | Left-Hand Sheet Bend, #1432, the bight's lead reversed, the same knot and not the other hand (Eric); with the other lead reversed, Eskimo Sheet Bend (Eric) or Lapp Bend (knotsaver) |
+| 17, 20 (117, 138) | Carrick Bend, #1439; Ashley's figure is 138 (Eric) | #1428, the Double Coin Knot, or Pretzel Knot, #2283, with a lead reversed (Eric) |
+| 12 (77, 105) | Single Carrick Bend, #1445; Ashley's figure is 178 (Eric) | |
+| 11, 18 (74, 118) and 14, 16 (106, 114) | Single Carrick Bend, #1443 and #1444, which is which unknown | |
+| 10, 15 (73, 109) and 13, 19 (101) | Whatnot, #1406 and #1407 | Granny Knot, #1405, ends on the same side (Eric) |
+
+Every one of the 50 knotted drawings now has its Ashley number for each
+lead, standing ends on the same side / on opposite sides, in
+`results/knots.txt` and under each drawing on the page: for example 1402 /
+1207 (reef / thief), 1405 / 1406 or 1407 (granny / whatnot), and 117 as
+1428 / 1439m. Eric's suffixes: m is the mirror image of Ashley's figure, r
+the lead reversed. Of Ashley's own figures, only #1439 (138) and #1445
+(178) can be read from Eric's drawings. Two numbers stay open until Ashley's
+figures can be read: which Single Carrick group is #1443 and which #1444, and
+which Whatnot is #1406 and which #1407 (they differ by one crossing: 109
+becomes 101 by changing crossing 4, as Eric's note on the two suggests).
+
+This is what resolves the two clashes above: 109 matches as a Whatnot, the
+mirror image of 73, and 118 as a Single Carrick Bend, the mirror image of 74.
 
 - **Nothing missed.** No drawing up to 122, the last one indexed, is in a
   named group without being named.
@@ -56,8 +100,16 @@ the same knot. The 256 drawings fall into 20 groups.
   118 (carrick, unknown); 106 (single carrick, unknown) and 114 (single
   carrick); and 73 (whatnot, its first name covered with correction fluid) and
   109 (single carrick, reformed constrictor).
-- **The reformed constrictor is two knots.** 77 and 105 are one knot, which is
-  its own mirror image; 109 is another, whose mirror image is 73.
+- **Two clashes, resolved.** A mirror image keeps its name, so two of those
+  pairs cannot both be right. 109, a single carrick bend (reformed
+  constrictor) in the index, is the mirror image of 73, a whatnot; 118, a
+  Carrick bend, is the mirror image of 74, a single carrick bend. Ashley's
+  names (below) settle both: 109 is a whatnot (Ashley's Whatnot) and 118 a
+  single carrick bend; the Carrick Bend is only 117 and its mirror 138. Read
+  that way, the reformed constrictor is one knot, 77 and 105, its own mirror
+  image, and no two mirror images carry the names of different knots (106
+  and 114 differ only by "unknown"). `original/index.txt`
+  keeps the names as written; `results/checks.txt` lists both readings.
 - **"Overhand" is two kinds.** Written beside drawings 1 and 5, it marks the
   ropes wound once round each other; beside 9, 13 and 18, twice.
 
@@ -101,9 +153,9 @@ checked with SnapPy, which is not needed to run the script.
   Square knots 28, 56, 98 and 122 close across to the square knot, but 24 and
   60 close to 8₂₀. 8₂₀ has the same Alexander polynomial and determinant as the
   square knot, and only the Jones polynomial tells them apart.
-- **The reformed constrictor again.** 77 and 105 close to L6a2 and 5₁, and
-  109 to L6a3 and the trefoil, a second sign that the one name covers two
-  knots.
+- **The clash at 109 again.** 77 and 105 close to L6a2 and 5₁; 109 closes
+  to L6a3, the same link as the whatnot 73, a second sign that 109 belongs
+  with 73.
 
 `results/closures.txt` lists every knot and link with its polynomials and
 drawings, and every named drawing's two closures. `results/knots.txt` gives
@@ -142,3 +194,7 @@ It needs only the Python standard library.
 - The drawing pages are upside down in the scan, and every
   drawing is redrawn freehand, so the shapes vary from drawing to drawing; the
   crossings are always the key's.
+
+## Credits
+
+The drawings are Michael Gernreich's; [Claude](https://www.anthropic.com/claude) (Anthropic), working in Claude Code, co-wrote the transcriptions, the code and the documentation that present them. Commits Claude made carry a `Co-Authored-By: Claude` line.

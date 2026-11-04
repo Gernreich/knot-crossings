@@ -177,29 +177,54 @@ ACROSS: each rope's end joined on to the other rope's start: one loop, a knot. 8
     Jones      -t^-5 + t^-4 - t^-3 + 2t^-2 - t^-1 + 2 - t
      58  60 114 135 149 156 226 231
 
-The drawings named in the index, closed:
+The drawings named in the index, closed, and what The Ashley Book of
+Knots calls them, as matched by Eric (NautiKnots) on the IGKT forum
+(knot_crossings.py, BOOK, says how):
 
     n  own     across    name in the index
    24  unlink  8_20      square knot
+                           Ashley: Reef Knot, #1402
    26  L2a1    6_3       sheet bend
+                           Ashley: Sheet Bend, #1431
    28  unlink  3_1#3_1*  square knot
+                           Ashley: Reef Knot, #1402
    29  L2a1    8_20      sheet bend
+                           Ashley: Sheet Bend, #1431
    56  unlink  3_1#3_1*  square knot
+                           Ashley: Reef Knot, #1402
    58  L2a1    8_20*     sheet bend
+                           Ashley: Sheet Bend, #1431
    60  unlink  8_20*     square knot
+                           Ashley: Reef Knot, #1402
    61  L2a1    6_3       sheet bend
+                           Ashley: Sheet Bend, #1431
    73  L6a3    8_19      whatnot
+                           Ashley: Whatnot, #1406 or #1407
    74  L7a6    5_2       single carrick bend (unknown type)
+                           Ashley: Single Carrick Bend, #1443 or #1444
    77  L6a2    5_1       single carrick bend (Reformed constrictor knot)
+                           Ashley: Single Carrick Bend, #1445
    98  unlink  3_1#3_1*  square knot
+                           Ashley: Reef Knot, #1402
    99  L2a1    8_20      Sheet bend
+                           Ashley: Sheet Bend, #1431
   101  L6a1    3_1       whatnot
+                           Ashley: Whatnot, #1406 or #1407
   103  L2a1    6_3       Sheet bend
+                           Ashley: Sheet Bend, #1431
   105  L6a2    5_1       single carrick bend (Reformed constrictor knot)
+                           Ashley: Single Carrick Bend, #1445
   106  L7a5    8_20      single carrack bend (unknown)
-  109  L6a3    3_1       single carrick bend (Reformed constrictor)
+                           Ashley: Single Carrick Bend, #1443 or #1444
+  109  L6a3    3_1       single carrick bend (Reformed constrictor)  -> whatnot
+                           Ashley: Whatnot, #1406 or #1407
   114  L7a5    8_20*     single carrack bend
+                           Ashley: Single Carrick Bend, #1443 or #1444
   117  L8a8    8_18      The Carrack bend
-  118  L7a6    5_2*      Carrack bend (unknown)
+                           Ashley: Carrick Bend, #1439
+  118  L7a6    5_2*      Carrack bend (unknown)  -> single carrick bend (unknown)
+                           Ashley: Single Carrick Bend, #1443 or #1444
   120  L2a1    8_20      Sheet bend
+                           Ashley: Sheet Bend, #1431
   122  unlink  3_1#3_1*  square knot
+                           Ashley: Reef Knot, #1402

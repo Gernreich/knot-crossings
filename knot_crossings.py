@@ -423,6 +423,111 @@ def kind(name):
     return s.replace("(unknown type)", "(unknown)")
 
 
+# What The Ashley Book of Knots (1944) calls the knotted groups. On the
+# IGKT forum, Eric (NautiKnots) tied all 512 bends of the Carrick diagram,
+# these 256 crossings with each rope's standing end at either end, and named
+# each from Ashley ("Bends Based on the Carrick Bend Diagram", FORUM below).
+# Moving a standing end changes which end is pulled, not the drawing, so one
+# drawing carries a name for each lead. Eric's crossings A-H are this key's
+# 6, 1, 5, 8, 7, 4, 3, 2, Eric's white rope the 1st and grey the 2nd: the
+# figures of #1207, #1439 and #1445, read crossing by crossing, are
+# drawings 195/199/227/231, 138/117 and 178/77. The other figures are gone
+# from the forum, so the remaining groups are matched by elimination: Eric
+# finds three Single Carrick Bends and two Whatnots, ties the Whatnot 8 ways
+# and the Thief Knot 12, and those counts fit only as below. Ashley numbers
+# also checked against Wikipedia.
+FORUM = "https://discourse.igkt.net/t/bends-based-on-the-carrick-bend-diagram/6260"
+BOOK = [
+    # drawings naming the groups, Ashley's name, other names, how matched
+    ((24,), "Reef Knot, #1402",
+     "Thief Knot, #1207, with the standing ends on opposite sides (Eric)",
+     "Eric's #1207 figure is drawings 195, 199, 227 and 231, all in this group"),
+    ((26, 29), "Sheet Bend, #1431",
+     "Left-Hand Sheet Bend, #1432, with the bight's lead reversed (Ashley's name; "
+     "Eric notes it is the same knot, not the other hand); with the other lead "
+     "reversed, the Eskimo Sheet Bend (Eric's name) or Lapp Bend (knotsaver)",
+     "the index"),
+    ((117, 138), "Carrick Bend, #1439",
+     "with a lead reversed, #1428, the Double Coin Knot or Pretzel Knot, #2283 (Eric)",
+     "Eric's #1439 figures: Ashley's own, the left-handed one, is 138; 117 is its "
+     "mirror image"),
+    ((77,), "Single Carrick Bend, #1445", "",
+     "Eric's #1445 figures: Ashley's own is 178; 77 is its mirror image"),
+    ((74, 118), "Single Carrick Bend, #1443 or #1444", "",
+     "by elimination; which of the two needs Ashley's figures"),
+    ((106, 114), "Single Carrick Bend, #1443 or #1444", "",
+     "by elimination; which of the two needs Ashley's figures"),
+    ((73, 109), "Whatnot, #1406 or #1407",
+     "Granny Knot, #1405, with the standing ends on the same side (Eric)",
+     "by elimination, with Eric's 8 Whatnot ties; the index calls 109 a single "
+     "carrick bend"),
+    ((101, 154), "Whatnot, #1406 or #1407",
+     "Granny Knot, #1405, with the standing ends on the same side (Eric)",
+     "by elimination, with Eric's 8 Whatnot ties"),
+]
+
+
+# Two names in the index clash with the drawings' mirror images and with
+# Ashley. original/index.txt keeps them as written; these are the readings
+# used beside them.
+CORRECTED = {
+    109: ("whatnot",
+          "the mirror image of 73, which the index calls a whatnot, and a mirror "
+          "image keeps its name; Ashley's Whatnot (Eric's counts), not a Single "
+          "Carrick Bend"),
+    118: ("single carrick bend (unknown)",
+          "the mirror image of 74, a single carrick bend (unknown type); Ashley's "
+          "Single Carrick Bend, while the Carrick Bend itself is only 117 and 138"),
+}
+
+
+# Ashley numbers for every knotted drawing, one for each lead: the standing
+# ends on the same side, and on opposite sides (diagonal). Eric's figures show
+# Ashley's #1207, #1439 and #1445 with the standing ends on opposite sides;
+# the Reef Knot and Granny Knot have them on the same side, the Thief Knot
+# and Whatnot opposite (Eric; Ashley on the Whatnot: "the ends are
+# diagonally opposite"). Suffixes are Eric's: m the mirror image of Ashley's
+# figure, r the lead reversed. Where the hand of Ashley's figure is not known
+# no m is given; where the number is not known both are given.
+LEADS = [
+    # drawings naming the groups, same side, opposite
+    ((24,), "1402", "1207"),
+    ((26, 29), "1431 or 1432", "1431 or 1432"),
+    ((138,), "1428m", "1439"),
+    ((117,), "1428", "1439m"),
+    ((178, 150), "1445r", "1445"),
+    ((77, 105), "1445rm", "1445m"),
+    ((74, 118, 106, 114), "1443r or 1444r", "1443 or 1444"),
+    ((73, 109, 101, 154), "1405", "1406 or 1407"),
+]
+
+
+def abok(n, group_of):
+    """(same side, opposite) Ashley numbers for drawing n, or None if it is
+    not a knot. A drawing listed by number takes its own entry before its
+    group's."""
+    for ns, same, opposite in LEADS:
+        if n in ns:
+            return same, opposite
+    for ns, same, opposite in LEADS:
+        if group_of[n] in {group_of[m] for m in ns} and not {138, 117, 178, 77} & set(ns):
+            return same, opposite
+    return None
+
+
+def corrected(names):
+    return {n: CORRECTED[n][0] if n in CORRECTED else name for n, name in names.items()}
+
+
+def book_names(group_of):
+    """Each knotted group's entry in BOOK."""
+    out = {}
+    for ns, ashley, other, how in BOOK:
+        for n in ns:
+            out[group_of[n]] = (ashley, other, how)
+    return out
+
+
 def analyse():
     group_of, members = groups()
     mirror = {g: group_of[255 - ns[0]] for g, ns in enumerate(members, 1)}
@@ -436,17 +541,22 @@ def knots_txt(group_of, mirror, names, drawn):
              "pass going over unless circled. lk = linking number of the two ropes",
              "closed on themselves. Group = knot, ends allowed to twist (groups.txt).",
              "Own, across = the link and the knot the drawing closes to (closures.txt).",
+             "ABOK = Ashley's number with the standing ends on the same side / on",
+             "opposite sides, for the 50 drawings that make a knot (BOOK, LEADS in",
+             "knot_crossings.py; m = mirror image of Ashley's figure, r = lead reversed).",
              "",
              f"{'n':>3}  {'circled':<15}  {'1st rope':<8}  {'2nd rope':<8}  {'lk':>2}  "
-             f"{'group':>5}  {'own':<6}  {'across':<8}  name on the page",
+             f"{'group':>5}  {'own':<6}  {'across':<8}  {'ABOK':<31}  name on the page",
              ""]
     for n in range(256):
         circled = ",".join(str(k) for k in CROSSINGS if n >> (k - 1) & 1) or "-"
         w1, w2 = words(n)
         name = names.get(n) or (f'"{drawn[n]}" (on the drawing)' if n in drawn else "")
         own, across = (identify(n, c)[0] for c in CLOSURES)
+        a = abok(n, group_of)
+        a = f"{a[0]} / {a[1]}" if a else "-"
         lines.append(f"{n:>3}  {circled:<15}  {w1:<8}  {w2:<8}  {linking(n):>2}  "
-                     f"{group_of[n]:>5}  {own:<6}  {across:<8}  {name}".rstrip())
+                     f"{group_of[n]:>5}  {own:<6}  {across:<8}  {a:<31}  {name}".rstrip())
     return "\n".join(lines) + "\n"
 
 
@@ -476,7 +586,7 @@ CLOSURE_TEXT = {
 }
 
 
-def closures_txt(names):
+def closures_txt(names, group_of):
     lines = ["Every drawing closed up, its four ends joined in the two ways that add",
              "no crossing:", ""]
     for c in CLOSURES:
@@ -508,11 +618,16 @@ def closures_txt(names):
             for i in range(0, len(ns), 16):
                 lines.append("    " + " ".join(f"{n:>3}" for n in ns[i:i + 16]))
             lines.append("")
-    lines += ["The drawings named in the index, closed:", "",
+    lines += ["The drawings named in the index, closed, and what The Ashley Book of",
+              "Knots calls them, as matched by Eric (NautiKnots) on the IGKT forum",
+              "(knot_crossings.py, BOOK, says how):", "",
               f"  {'n':>3}  {'own':<6}  {'across':<8}  name in the index"]
     for n in sorted(names):
         own, across = (identify(n, c)[0] for c in CLOSURES)
-        lines.append(f"  {n:>3}  {own:<6}  {across:<8}  {names[n]}")
+        lines.append(f"  {n:>3}  {own:<6}  {across:<8}  {names[n]}"
+                     + (f"  -> {CORRECTED[n][0]}" if n in CORRECTED else ""))
+        lines.append(f"  {'':>3}  {'':<6}  {'':<8}    Ashley: "
+                     f"{book_names(group_of)[group_of[n]][0]}")
     return "\n".join(lines) + "\n"
 
 
@@ -569,6 +684,21 @@ def checks_txt(group_of, members, mirror, names):
             if a < b and kind(names[a]) != kind(names[b]) and \
                     mirror[group_of[a]] == group_of[b] and group_of[a] != group_of[b]:
                 lines.append(f"  {a} {names[a]}  <->  {b} {names[b]}")
+    lines += ["", "Clashes resolved (original/index.txt is left as written):", ""]
+    for n, (name, why) in CORRECTED.items():
+        lines.append(f"  {n} {names[n]}  ->  {name}")
+        lines.append(f"      {why}")
+    fixed = corrected(names)
+    by_fixed = defaultdict(list)
+    for n, name in fixed.items():
+        by_fixed[kind(name)].append(n)
+    lines += ["", "Each name once they are resolved:", ""]
+    for k, ns in sorted(by_fixed.items(), key=lambda t: min(t[1])):
+        gs = sorted({group_of[n] for n in ns})
+        mirrored = all(mirror[g] in gs for g in gs)
+        lines.append(f"  {k}: {', '.join(map(str, sorted(ns)))} -> group "
+                     f"{', '.join(map(str, gs))}"
+                     + (" (closed under mirror images)" if mirrored else ""))
     alt = [n for n in range(256) if alternating(n)]
     lines += ["", f"Alternating drawings (over, under, over ... along both ropes): "
               f"{', '.join(map(str, alt))}", ""]
@@ -658,6 +788,19 @@ def closure_drawing(n, closure):
             f'{arcs}<use href="#rope1"/><use href="#rope2"/>{overs(n)}</svg>')
 
 
+def book_rows(group_of, members):
+    rows = []
+    for ns, ashley, other, how in BOOK:
+        gs = sorted({group_of[n] for n in ns})
+        draw = sorted(n for g in gs for n in members[g - 1])
+        rows.append(
+            f'<tr><td>{", ".join(f"<a href=#g{g}>{g}</a>" for g in gs)}</td>'
+            f'<td><b>{escape(ashley)}</b></td><td>{escape(other) or "&mdash;"}</td>'
+            f'<td>{escape(how)}</td>'
+            f'<td class="members">{" ".join(f"<a href=#d{n}>{n}</a>" for n in draw)}</td></tr>')
+    return "\n".join(rows)
+
+
 def page(group_of, members, mirror, names, drawn, results):
     rows = []
     for g, ns in enumerate(members, 1):
@@ -688,17 +831,23 @@ def page(group_of, members, mirror, names, drawn, results):
                 f'<td class="members">{len(ns)}: {links}</td></tr>')
         closed[c] = "\n".join(crows)
     named_rows = "\n".join(
-        f'<tr><td class="num"><a href="#d{n}">{n}</a></td><td>{escape(names[n])}</td>'
+        f'<tr><td class="num"><a href="#d{n}">{n}</a></td><td>{escape(names[n])}'
+        + (f'<br><b>&rarr; {escape(CORRECTED[n][0])}</b>' if n in CORRECTED else '')
+        + '</td>'
+        f'<td>{escape(book_names(group_of)[group_of[n]][0])}</td>'
         + "".join(f'<td>{poly_html(identify(n, c)[0])}</td>' for c in CLOSURES) + "</tr>"
         for n in sorted(names))
     cards = []
     for n in range(256):
         label = names.get(n) or (f"&ldquo;{escape(drawn[n])}&rdquo;" if n in drawn else "")
         own, across = (poly_html(identify(n, c)[0]) for c in CLOSURES)
+        a = abok(n, group_of)
+        a = (f'<i class="abok">ABOK {escape(a[0])} &middot; {escape(a[1])}</i>'
+             if a else "")
         cards.append(f'<figure id="d{n}"{" class=named" if n in names else ""}>'
                      f'{drawing(n)}<figcaption><b>{n}</b> '
                      f'<a href="#g{group_of[n]}">g{group_of[n]}</a>'
-                     f'<i>{own} &middot; {across}</i>'
+                     f'<i>{own} &middot; {across}</i>{a}'
                      f'<span>{escape(label) if n in names else label}</span>'
                      f'</figcaption></figure>')
     return (PAGE.replace("{defs}", DEFS).replace("{key}", key_drawing())
@@ -708,6 +857,7 @@ def page(group_of, members, mirror, names, drawn, results):
             .replace("{close_across}", closure_drawing(117, "across"))
             .replace("{own}", closed["own"]).replace("{across}", closed["across"])
             .replace("{named}", named_rows)
+            .replace("{book}", book_rows(group_of, members)).replace("{forum}", FORUM)
             .replace("{cards}", "\n".join(cards))).encode()
 
 
@@ -767,6 +917,7 @@ figcaption { font-size: .75rem; line-height: 1.3; }
 figcaption a { margin-left: .3rem; color: var(--muted); }
 figcaption span { display: block; color: var(--muted); }
 figcaption i { display: block; font-style: normal; }
+figcaption i.abok { color: var(--link); }
 h3 { font-size: 1.1rem; margin: 1.8rem 0 .4rem; }
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; max-width: 34rem;
         margin: 1rem auto; }
@@ -805,12 +956,17 @@ other way gives the mirror image of every drawing, and changes no name.</p>
 </div>
 
 <h2>The index, checked</h2>
-<p>Every name in the hand-made index lands in a single group, or in a group
-and its mirror image; the square knot, which is its own mirror image, lands in
-a group that is its own mirror. No drawing up to 122, the last one indexed, is
-in a named group without being named. Three pairs of names turn out to be
-mirror images of one another, and one name, the reformed constrictor, covers
-two different knots.</p>
+<p>The square knot, which is its own mirror image, lands in a group that is
+its own mirror, and the sheet bend in a group and its mirror image. No drawing
+up to 122, the last one indexed, is in a named group without being named.
+Three pairs of names turn out to be mirror images of one another, and two of
+those pairs clash: 109, a single carrick bend (reformed constrictor) in the
+index, is the mirror image of 73, a whatnot; and 118, a Carrick bend, is the
+mirror image of 74, a single carrick bend. A mirror image keeps its name, and
+the names in <i>The Ashley Book of Knots</i> (below) settle both: 109 is a
+whatnot and 118 a single carrick bend. Read that way, the reformed
+constrictor is one knot, 77 and 105, and no two mirror images carry the
+names of different knots (106 and 114 differ only by &ldquo;unknown&rdquo;). The index itself is kept as written.</p>
 {checks}
 
 <h2>The groups</h2>
@@ -866,12 +1022,46 @@ images.</p>
 <p>A name in the index belongs to the knot in the hand, with its ends free to
 turn; the closures depend on how the ends lie in the drawing, so drawings with
 one name can close differently.</p>
+<p>The <q>In Ashley</q> column is explained in the next section.</p>
 <div class="wrap"><table>
-<tr><th>Drawing</th><th>Name in the index</th><th>Own</th><th>Across</th></tr>
+<tr><th>Drawing</th><th>Name in the index</th><th>In Ashley</th><th>Own</th><th>Across</th></tr>
 {named}
 </table></div>
 
+<h2>Names in the book</h2>
+<p><i>The Ashley Book of Knots</i> (1944) works from the same diagram. Ashley
+draws the reef knot, sheet bend, Carrick bend and granny knot on it
+(#1549&ndash;1552) and notes that an eight-crossing knot allows 256
+over-and-under arrangements. In 2025, Eric (NautiKnots on the forum of the
+International Guild of Knot Tyers) tied all of them, each with the standing
+ends on the same side and on opposite sides, and named every bend that held
+from Ashley: <a href="{forum}">Bends Based on the Carrick Bend Diagram</a>.
+Which end is standing changes how the knot is pulled, not the drawing, so one
+drawing can carry two names, one for each lead. The names below are
+Eric&rsquo;s, with one more from knotsaver in the same thread.</p>
+<p>Eric&rsquo;s crossings A to H are crossings 6, 1, 5, 8, 7, 4, 3 and 2 of
+the key. Eric&rsquo;s figures of the Thief Knot, the Carrick Bend and the third Single
+Carrick Bend, read crossing by crossing, come out as drawings here, each in
+the group this page had already put it in. The other figures no longer load
+on the forum, so the rest are matched by elimination: Eric finds three Single
+Carrick Bends and two Whatnots, and ties the Whatnot 8 ways and the Thief
+Knot 12, which fits only one way. The count agrees with this page:
+of the 512 bends, 100 held and the rest fell apart, and groups 1 to 6 here
+hold 206 drawings, which leaves 50 knotted drawings, 100 with both leads. The Ashley numbers are Eric&rsquo;s, and
+Wikipedia&rsquo;s where it gives them, not checked against the book.</p>
+<div class="wrap"><table>
+<tr><th>Groups</th><th>Ashley</th><th>Other names</th><th>Matched by</th><th>Drawings</th></tr>
+{book}
+</table></div>
+
 <h2>All 256</h2>
+<p>Under each drawing: the link and the knot it closes to (own &middot;
+across), and, for the 50 drawings that make a knot, Ashley&rsquo;s number
+with the standing ends on the same side &middot; on opposite sides. In those,
+m marks the mirror image of Ashley&rsquo;s figure and r the lead reversed
+(Eric&rsquo;s notation); <q>1443 or 1444</q> and <q>1406 or 1407</q> wait on
+Ashley&rsquo;s figures. The other 206 drawings, by Eric&rsquo;s count, fall
+apart when pulled.</p>
 <p>Drawn from the key, with the crossings the author circled ringed in yellow
 and the drawings named in the index outlined. The two ropes keep their colours: the 1st in
 red, the 2nd in blue. The originals are in <a href="scans/knot-crossings.pdf">the
@@ -881,6 +1071,7 @@ scan</a>; the index and the notes beside the drawings are transcribed in
 <div class="grid">
 {cards}
 </div>
+<p class="credit" style="margin-top:2em;font-size:0.85em;opacity:0.75">The drawings are Michael Gernreich's; <a href="https://www.anthropic.com/claude">Claude</a> (Anthropic), working in Claude Code, co-wrote the transcriptions, the code and the documentation that present them. Commits Claude made carry a <code>Co-Authored-By: Claude</code> line.</p>
 </main>
 </body>
 </html>
@@ -893,7 +1084,7 @@ def outputs():
         "knots.txt": knots_txt(group_of, mirror, names, drawn).encode(),
         "groups.txt": groups_txt(members, mirror, names, drawn).encode(),
         "checks.txt": checks_txt(group_of, members, mirror, names).encode(),
-        "closures.txt": closures_txt(names).encode(),
+        "closures.txt": closures_txt(names, group_of).encode(),
     }
     files = {f"results/{name}": data for name, data in results.items()}
     files["index.html"] = page(group_of, members, mirror, names, drawn, results)
