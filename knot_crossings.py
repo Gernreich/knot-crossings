@@ -951,9 +951,10 @@ Carrick bend and its relatives.</p>
 <p>Here <a href="knot_crossings.py">knot_crossings.py</a> works the 256 out
 again from the key, and sorts them into knots with the Kauffman bracket, a
 number-like invariant that stays the same however a knot is redrawn. Without a circle, a crossing goes over for
-the rope that reaches it first, following the 1st rope and then the 2nd; that
-is the only reading under which the Carrick bend, number 117, comes out over,
-under, over, under all the way along both ropes. Reading every crossing the
+the rope that reaches it first, following the 1st rope and then the 2nd. Under
+this reading the Carrick bend, number 117, and its mirror image 138 = 255 &minus; 117
+are the only two that go over, under, over, under all the way along both
+ropes. Reading every crossing the
 other way gives the mirror image of every drawing, and changes no name.</p>
 </div>
 {key}
@@ -1542,9 +1543,23 @@ def outputs():
         "closures.txt": closures_txt(names, group_of).encode(),
     }
     files = {f"results/{name}": data for name, data in results.items()}
-    files["index.html"] = page(group_of, members, mirror, names, drawn, results)
-    files["turn.html"] = turn_page(group_of, names, drawn)
+    files["index.html"] = new_tab(page(group_of, members, mirror, names, drawn, results))
+    files["turn.html"] = new_tab(turn_page(group_of, names, drawn))
     return files
+
+
+
+def new_tab(data):
+    """Every link but an in-page #anchor opens in a new tab. A link written
+    inside a script string (href=\\"...\\") gets its quotes escaped the same way."""
+    def fix(m):
+        tag = m.group(0)
+        h = re.search(r'href\s*=\s*(\\?)["\']?([^"\'\\\s>]*)', tag)
+        if not h or h.group(2).startswith(("#", "?")) or re.search(r"\btarget\s*=", tag):
+            return tag
+        q = '\\"' if h.group(1) else '"'
+        return tag[:-1] + f" target={q}_blank{q} rel={q}noopener{q}>"
+    return re.sub(r"<a\b[^>]*>", fix, data.decode()).encode()
 
 
 def main():
