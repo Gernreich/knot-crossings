@@ -3,7 +3,7 @@
 worked out again and checked against the hand-made index. The drawings and
 the index are kept unchanged in scans/ and original/.
 
-    python3 knot_crossings.py           # writes results/ and index.html
+    python3 knot_crossings.py           # writes results/, index.html and turn.html
     python3 knot_crossings.py --check   # exits 1 if any of them would change
 
 Standard library only.
@@ -14,6 +14,8 @@ Standard library only.
   results/checks.txt   the index set beside the groups
   results/closures.txt each drawing's ends joined two ways, and the links and
                        knots that makes, by Jones and Alexander polynomial
+  turn.html            any drawing as two ropes in 3D (three.js), ends loose
+                       or joined, plain or laid rope
 """
 import functools
 import math
@@ -847,6 +849,7 @@ def page(group_of, members, mirror, names, drawn, results):
         cards.append(f'<figure id="d{n}"{" class=named" if n in names else ""}>'
                      f'{drawing(n)}<figcaption><b>{n}</b> '
                      f'<a href="#g{group_of[n]}">g{group_of[n]}</a>'
+                     f'<a href="turn.html#{n}">3D</a>'
                      f'<i>{own} &middot; {across}</i>{a}'
                      f'<span>{escape(label) if n in names else label}</span>'
                      f'</figcaption></figure>')
@@ -932,7 +935,8 @@ td.poly { font-size: .8rem; min-width: 14rem; }
 {defs}
 <main>
 <h1>Knot Crossings</h1>
-<p class="back"><a href="https://gernreich.github.io/">&larr; All projects</a></p>
+<p class="back"><a href="https://gernreich.github.io/">&larr; All projects</a>
+&middot; <a href="turn.html">Turn the ropes in 3D &rarr;</a></p>
 
 <div class="lay">
 <div>
@@ -1078,6 +1082,457 @@ scan</a>; the index and the notes beside the drawings are transcribed in
 """
 
 
+# The 3D view ----------------------------------------------------------------
+
+def turn_info(n, group_of, names, drawn):
+    """What the 3D view says about drawing n, as HTML."""
+    g = group_of[n]
+    book = book_names(group_of).get(g)
+    a = abok(n, group_of)
+    lines = [f'<b>{n}</b> &middot; <a href="index.html#g{g}">group {g}</a> &middot; '
+             f'<a href="index.html#d{n}">card</a>']
+    if book:
+        lines.append(f'<b>{escape(book[0])}</b>'
+                     + (f' &middot; {escape(book[1])}' if book[1] else ''))
+        lines.append(f'ABOK {escape(a[0])} with the standing ends on the same side, '
+                     f'{escape(a[1])} on opposite sides')
+    else:
+        lines.append("Not in Ashley: by Eric&rsquo;s count it falls apart when pulled")
+    if n in names:
+        lines.append(f'Index: {escape(names[n])}'
+                     + (f' &rarr; {escape(CORRECTED[n][0])}' if n in CORRECTED else ''))
+    if n in drawn:
+        lines.append(f'Written on the drawing: &ldquo;{escape(drawn[n])}&rdquo;')
+    for c in CLOSURES:
+        name, common = identify(n, c)
+        lines.append(f'Ends joined {c}: {poly_html(name)}'
+                     + (f' ({rolfsen(escape(common))})' if common else ''))
+    return "<br>".join(lines)
+
+
+def turn_page(group_of, names, drawn):
+    import json
+    ropes = []
+    i = 0
+    for _, path in ROPES:
+        pts = []
+        for w in path:
+            x, y = point(w)
+            if isinstance(w, int):
+                pts.append([x, y, i])
+                i += 1
+            else:
+                pts.append([x, y, -1])
+        ropes.append(pts)
+    data = {
+        "ropes": ropes,
+        "passes": [[r, k, list(d), list(p)] for r, k, d, p in PASSES],
+        "at": {k: AT[k] for k in CROSSINGS},
+        "close": {c: [[float(v) for v in re.findall(r"-?\d+", d)] for d in ds]
+                  for c, ds in CLOSE_PATHS.items()},
+        "closePaths": CLOSE_PATHS,
+        "info": [turn_info(n, group_of, names, drawn) for n in range(256)],
+    }
+    return (TURN.replace("{defs}", DEFS)
+            .replace("{data}", json.dumps(data, separators=(",", ":")))).encode()
+
+
+TURN = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Knot Crossings 3D</title>
+<style>
+:root { --bg: #fbfaf7; --fg: #1d1d1b; --muted: #5d5b55; --rule: #dedbd3;
+        --link: #2a5d9f; --panel: #f1efe9; --r1: #b4462b; --r2: #2a5d9f;
+        --join: #8f8c84; --mark: #c9a227; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #161615; --fg: #e8e6e1; --muted: #a29f97; --rule: #34332f;
+          --link: #8ab4f0; --panel: #20201e; --r1: #e8866b; --r2: #8ab4f0;
+          --join: #8f8c84; --mark: #d9b84a; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg);
+       font: 16px/1.5 Georgia, "Times New Roman", serif; }
+main { max-width: 76rem; margin: 0 auto; padding: 1.5rem 16px 3rem; }
+h1 { font-size: 1.9rem; margin: 0 0 .2rem; }
+a { color: var(--link); }
+.back { margin: 0 0 1rem; font-family: system-ui, sans-serif; font-size: .95rem; }
+.lay { display: grid; grid-template-columns: minmax(0, 1fr) 19rem; gap: 1.2rem;
+       align-items: start; }
+@media (max-width: 760px) { .lay { grid-template-columns: 1fr; } }
+.stage { position: relative; background: var(--panel); border: 1px solid var(--rule);
+         border-radius: 6px; overflow: hidden; }
+#view { display: block; width: 100%; height: min(78vh, 820px); touch-action: none;
+        cursor: grab; }
+.hint { position: absolute; left: 10px; bottom: 8px; margin: 0; color: var(--muted);
+        font: .78rem system-ui, sans-serif; pointer-events: none; }
+.panel { font-family: system-ui, sans-serif; font-size: .9rem; }
+.pick { display: flex; gap: .4rem; align-items: center; margin-bottom: .8rem; }
+.pick input { width: 5rem; font: inherit; font-size: 1.2rem; padding: .2rem .4rem;
+              background: var(--bg); color: var(--fg); border: 1px solid var(--rule);
+              border-radius: 4px; }
+button { font: inherit; padding: .3rem .7rem; background: var(--bg); color: var(--fg);
+         border: 1px solid var(--rule); border-radius: 4px; cursor: pointer; }
+fieldset { border: 1px solid var(--rule); border-radius: 4px; margin: 0 0 .7rem;
+           padding: .3rem .6rem .5rem; }
+legend { color: var(--muted); padding: 0 .3rem; }
+label { display: inline-block; margin: .15rem .9rem .15rem 0; cursor: pointer; }
+#info { font-family: Georgia, serif; font-size: .92rem; line-height: 1.45;
+        margin: .8rem 0; }
+#flat { display: block; width: 100%; max-width: 12rem; margin: 0 auto; }
+#flat path, #flat use { fill: none; stroke-width: 18; stroke-linecap: round;
+                        stroke-linejoin: round; }
+.r1 { stroke: var(--r1); } .r2 { stroke: var(--r2); }
+.h { stroke: var(--panel); stroke-width: 48; stroke-linecap: butt; }
+.c { fill: none; stroke: var(--mark); stroke-width: 7; }
+#flat path.cl { stroke: var(--join); stroke-width: 10; stroke-dasharray: 26 18; }
+.flatbox { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px;
+           padding: .5rem; }
+p.note { color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+{defs}
+<main>
+<h1>Knot Crossings in 3D</h1>
+<p class="back"><a href="https://gernreich.github.io/">&larr; All projects</a>
+&middot; <a href="index.html">&larr; Knot Crossings</a></p>
+<div class="lay">
+<div class="stage">
+<canvas id="view" aria-label="Turnable 3D view of the two ropes"></canvas>
+<p class="hint">Drag to turn &middot; right-drag or shift-drag to move &middot; wheel or pinch to zoom &middot; double-click to turn round a point</p>
+</div>
+<div class="panel">
+<div class="pick">
+<button id="prev" aria-label="previous drawing">&larr;</button>
+<input id="n" type="number" min="0" max="255" value="117" aria-label="drawing number">
+<button id="next" aria-label="next drawing">&rarr;</button>
+<button id="rand">random</button>
+</div>
+<fieldset><legend>Ends</legend>
+<label><input type="radio" name="ends" value="loose" checked> loose</label>
+<label><input type="radio" name="ends" value="own"> joined own</label>
+<label><input type="radio" name="ends" value="across"> joined across</label>
+</fieldset>
+<fieldset><legend>Rope</legend>
+<label><input type="radio" name="rope" value="plain" checked> plain</label>
+<label><input type="radio" name="rope" value="laid"> laid, three strands</label>
+</fieldset>
+<fieldset><legend>Show</legend>
+<label><input type="checkbox" id="nums"> crossing numbers</label>
+<label><input type="checkbox" id="spin" checked> spin</label>
+</fieldset>
+<div id="info"></div>
+<div class="flatbox"><svg id="flat" role="img" aria-label="the drawing, flat"></svg></div>
+<p class="note">Each rope lifts toward you where it goes over and drops away where it goes under,
+as the drawing&rsquo;s circles say. The 1st rope is red, the 2nd blue. Loose is the rope in the
+hand. Joined own closes each rope on itself (a link) and joined across runs one rope into the
+other (a knot), the two closures the main page names; the joining rope is grey.</p>
+</div>
+</div>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const D = {data};
+const R = 17, H = 27;               // rope radius, and how far a pass lifts or drops at a crossing
+const PITCH = 105;                  // length of one turn of a laid strand
+const CX = 335, CY = 600;           // middle of the key
+const V = (x, y, z = 0) => new THREE.Vector3(x - CX, CY - y, z);
+
+// --- the ropes as 3D control points ------------------------------------------
+const overPass = (n, k) => D.at[k][(n >> (k - 1)) & 1];
+function ropePoints(n, r) {
+  const overs = new Set(Object.keys(D.at).map(k => overPass(n, +k)));
+  return D.ropes[r].map(([x, y, i]) => V(x, y, i < 0 ? 0 : overs.has(i) ? H : -H));
+}
+function bez(b, t) {
+  const u = 1 - t;
+  const c = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t];
+  return [0, 1].map(j => c[0] * b[j] + c[1] * b[2 + j] + c[2] * b[4 + j] + c[3] * b[6 + j]);
+}
+function arc(mode, from, to) {   // points strictly between two ends, along the joining path
+  for (const b of D.close[mode]) {
+    const s = [b[0], b[1]], e = [b[6], b[7]];
+    const same = (p, q) => p[0] === q[0] && p[1] === q[1];
+    let ts = [1, 2, 3, 4, 5, 6, 7].map(i => i / 8);
+    if (same(s, from) && same(e, to)) return ts.map(t => V(...bez(b, t)));
+    if (same(e, from) && same(s, to)) return ts.reverse().map(t => V(...bez(b, t)));
+  }
+  throw new Error('no joining path');
+}
+// each loop: control points with a colour label (0 1st, 1 2nd, 2 join) for the span after it
+function loops(n, mode) {
+  const p = [ropePoints(n, 0), ropePoints(n, 1)];
+  const end = r => D.ropes[r][D.ropes[r].length - 1].slice(0, 2), start = r => D.ropes[r][0].slice(0, 2);
+  const lab = (pts, l) => pts.map(v => ({ v, l }));
+  const rope = r => { const a = lab(p[r], r); a[a.length - 1].l = 2; return a; };
+  if (mode === 'loose') return [0, 1].map(r => ({ pts: lab(p[r], r), closed: false }));
+  if (mode === 'own') return [0, 1].map(r => ({ pts: rope(r).concat(lab(arc('own', end(r), start(r)), 2)), closed: true }));
+  return [{ pts: rope(0).concat(lab(arc('across', end(0), start(1)), 2), rope(1),
+                                 lab(arc('across', end(1), start(0)), 2)), closed: true }];
+}
+
+// Catmull-Rom through the control points, as the flat drawing does, then
+// resampled at even steps along the rope
+function centreline(loop, step) {
+  const P = loop.pts, m = P.length, dense = [];
+  const at = i => loop.closed ? P[(i + m) % m].v : P[Math.max(0, Math.min(m - 1, i))].v;
+  const spans = loop.closed ? m : m - 1;
+  for (let i = 0; i < spans; i++) {
+    const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
+    for (let s = 0; s < 32; s++) {
+      const t = s / 32, t2 = t * t, t3 = t2 * t;
+      const v = new THREE.Vector3();
+      for (const [q, w] of [[p0, -t3 + 2 * t2 - t], [p1, 3 * t3 - 5 * t2 + 2],
+                            [p2, -3 * t3 + 4 * t2 + t], [p3, t3 - t2]]) v.addScaledVector(q, w / 2);
+      dense.push({ v, l: P[i].l });
+    }
+  }
+  dense.push({ v: (loop.closed ? P[0] : P[m - 1]).v.clone(), l: P[spans - 1].l });
+  const len = [0];
+  for (let i = 1; i < dense.length; i++) len.push(len[i - 1] + dense[i].v.distanceTo(dense[i - 1].v));
+  const L = len[len.length - 1], N = Math.max(8, Math.round(L / step)), out = [];
+  for (let j = 0, i = 0; j <= N; j++) {
+    const s = L * j / N;
+    while (i < dense.length - 2 && len[i + 1] < s) i++;
+    const f = (s - len[i]) / Math.max(1e-9, len[i + 1] - len[i]);
+    out.push({ v: dense[i].v.clone().lerp(dense[i + 1].v, f), l: dense[i].l, s });
+  }
+  if (loop.closed) out.pop();           // the last point is the first again
+  return { pts: out, L, closed: loop.closed };
+}
+
+class Polyline extends THREE.Curve {    // straight between close points, by length
+  constructor(v, closed) {
+    super(); this.v = closed ? v.concat([v[0]]) : v; this.len = [0];
+    for (let i = 1; i < this.v.length; i++) this.len.push(this.len[i - 1] + this.v[i].distanceTo(this.v[i - 1]));
+  }
+  getPoint(t, out = new THREE.Vector3()) {
+    const L = this.len[this.len.length - 1], s = t * L;
+    let lo = 0, hi = this.len.length - 1;
+    while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (this.len[mid] <= s) lo = mid; else hi = mid; }
+    const f = (s - this.len[lo]) / Math.max(1e-9, this.len[hi] - this.len[lo]);
+    return out.copy(this.v[lo]).lerp(this.v[hi], f);
+  }
+}
+
+function colours() {
+  const css = getComputedStyle(document.documentElement);
+  return ['--r1', '--r2', '--join'].map(k => new THREE.Color(css.getPropertyValue(k).trim()));
+}
+function tube(v, labels, closed, radius, radial, shade) {
+  const segs = closed ? v.length : v.length - 1;
+  const g = new THREE.TubeGeometry(new Polyline(v, closed), segs, radius, radial, closed);
+  const C = colours(), col = [];
+  for (let i = 0; i <= segs; i++) {
+    const c = C[labels[i % labels.length]].clone().multiplyScalar(shade);
+    for (let j = 0; j <= radial; j++) col.push(c.r, c.g, c.b);
+  }
+  g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  return g;
+}
+// three strands laid round the centreline: parallel-transported frames, with
+// a closed loop's leftover twist spread along it and a whole number of turns
+function strands(c) {
+  const P = c.pts.map(p => p.v), n = P.length, T = [], N = [];
+  for (let i = 0; i < n; i++) {
+    const a = c.closed ? P[(i - 1 + n) % n] : P[Math.max(0, i - 1)];
+    const b = c.closed ? P[(i + 1) % n] : P[Math.min(n - 1, i + 1)];
+    T.push(b.clone().sub(a).normalize());
+  }
+  let n0 = new THREE.Vector3(0, 0, 1).cross(T[0]);
+  if (n0.length() < 1e-3) n0 = new THREE.Vector3(1, 0, 0).cross(T[0]);
+  N.push(n0.normalize());
+  const transport = (v, t) => v.clone().addScaledVector(t, -v.dot(t)).normalize();
+  for (let i = 1; i < n; i++) N.push(transport(N[i - 1], T[i]));
+  let twist = 0, pitch = PITCH;
+  if (c.closed) {
+    const back = transport(N[n - 1], T[0]);
+    twist = Math.atan2(N[0].clone().cross(back).dot(T[0]), N[0].dot(back));
+    pitch = c.L / Math.max(1, Math.round(c.L / PITCH));
+  }
+  const rho = 0.56 * R, out = [];
+  for (let j = 0; j < 3; j++) {
+    const v = [];
+    for (let i = 0; i < n; i++) {
+      const s = c.pts[i].s, B = T[i].clone().cross(N[i]);
+      const phi = 2 * Math.PI * (s / pitch + j / 3) - twist * s / c.L;
+      v.push(P[i].clone().addScaledVector(N[i], rho * Math.cos(phi)).addScaledVector(B, rho * Math.sin(phi)));
+    }
+    out.push(v);
+  }
+  return out;
+}
+
+// --- scene ---------------------------------------------------------------------
+const canvas = document.getElementById('view');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(35, 4 / 3, 10, 20000);
+const controls = new THREE.OrbitControls(camera, canvas);
+controls.enableDamping = true;
+scene.add(new THREE.HemisphereLight(0xffffff, 0x6f6a60, 0.7));
+const sun = new THREE.DirectionalLight(0xffffff, 0.75);
+sun.position.set(500, 700, 1200);
+scene.add(sun);
+const back = new THREE.DirectionalLight(0xffffff, 0.25);
+back.position.set(-600, -300, -900);
+scene.add(back);
+const world = new THREE.Group();
+scene.add(world);
+const ropeGroup = new THREE.Group(), numGroup = new THREE.Group();
+world.add(ropeGroup, numGroup);
+const mat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.75, metalness: 0 });
+
+function label(text) {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 128;
+  const x = cv.getContext('2d');
+  x.fillStyle = 'rgba(255,255,255,0.85)'; x.beginPath(); x.arc(64, 64, 52, 0, 7); x.fill();
+  x.fillStyle = '#1d1d1b'; x.font = 'bold 76px Georgia, serif';
+  x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(text, 64, 68);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), depthTest: false }));
+  s.scale.set(44, 44, 1); s.renderOrder = 2;
+  return s;
+}
+for (const k of Object.keys(D.at)) {
+  const [, , , [x, y]] = D.passes[D.at[k][0]];
+  const s = label(k); s.position.copy(V(x, y, H + R + 30)); numGroup.add(s);
+}
+
+let current = 117;
+const val = name => document.querySelector(`input[name=${name}]:checked`).value;
+function build() {
+  for (const m of ropeGroup.children) m.geometry.dispose();
+  ropeGroup.clear();
+  const laid = val('rope') === 'laid';
+  for (const loop of loops(current, val('ends'))) {
+    const c = centreline(loop, laid ? PITCH / 24 : 6);
+    const labels = c.pts.map(p => p.l);
+    if (laid) strands(c).forEach((v, j) =>
+      ropeGroup.add(new THREE.Mesh(tube(v, labels, c.closed, 0.52 * R, 10, [1, 0.82, 0.92][j]), mat)));
+    else ropeGroup.add(new THREE.Mesh(tube(c.pts.map(p => p.v), labels, c.closed, R, 16, 1), mat));
+    if (!c.closed) for (const p of [c.pts[0], c.pts[c.pts.length - 1]]) {
+      const g = new THREE.SphereGeometry(laid ? 1.08 * R : R, 20, 14);
+      const col = [], C = colours()[p.l];
+      for (let i = 0; i < g.attributes.position.count; i++) col.push(C.r, C.g, C.b);
+      g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+      const m = new THREE.Mesh(g, mat); m.position.copy(p.v); ropeGroup.add(m);
+    }
+  }
+  numGroup.visible = document.getElementById('nums').checked;
+  flat();
+  document.getElementById('info').innerHTML = D.info[current];
+  document.getElementById('n').value = current;
+  history.replaceState(null, '', '#' + current);
+}
+
+// the flat drawing, as on the main page
+function flat() {
+  const n = current, mode = val('ends'), parts = [];
+  if (mode !== 'loose') for (const d of D.closePaths[mode]) parts.push(`<path class="cl" d="${d}"/>`);
+  parts.push('<use href="#rope1"/><use href="#rope2"/>');
+  for (const k of Object.keys(D.at)) {
+    const [r, , [dx, dy], [x, y]] = D.passes[overPass(n, +k)], s = 42 / Math.hypot(dx, dy);
+    const seg = `M${(x - dx * s).toFixed(0)} ${(y - dy * s).toFixed(0)}L${(x + dx * s).toFixed(0)} ${(y + dy * s).toFixed(0)}`;
+    parts.push(`<path class="h" d="${seg}"/><path class="r${r + 1}" d="${seg}"/>`);
+    if ((n >> (k - 1)) & 1) parts.push(`<circle class="c" cx="${x}" cy="${y}" r="44"/>`);
+  }
+  const svg = document.getElementById('flat');
+  svg.setAttribute('viewBox', mode === 'loose' ? '0 110 680 960' : '-80 30 820 1110');
+  svg.innerHTML = parts.join('');
+}
+
+function show(n) { current = ((Math.round(n) % 256) + 256) % 256; build(); }
+document.getElementById('prev').onclick = () => show(current - 1);
+document.getElementById('next').onclick = () => show(current + 1);
+document.getElementById('rand').onclick = () => show(Math.floor(Math.random() * 256));
+document.getElementById('n').addEventListener('change', e => { if (e.target.value !== '') show(+e.target.value); });
+document.querySelectorAll('input[name=ends], input[name=rope], #nums').forEach(e => e.addEventListener('change', build));
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', build);
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' && e.target.type === 'number') return;
+  if (e.key === 'ArrowLeft') show(current - 1);
+  if (e.key === 'ArrowRight') show(current + 1);
+});
+window.addEventListener('hashchange', () => { const h = parseInt(location.hash.slice(1)); if (h >= 0 && h < 256 && h !== current) show(h); });
+
+// --- turning, moving and zooming ----------------------------------------------
+const spin = document.getElementById('spin');
+const home = new THREE.Vector3(0, -260, 1850);
+camera.position.copy(home);
+controls.target.set(0, 0, 0);
+controls.enableZoom = false;
+const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
+function under(cx, cy, ropeOnly) {   // the rope under the pointer, else where the ray meets the plane through the target
+  const b = canvas.getBoundingClientRect();
+  ndc.set((cx - b.left) / b.width * 2 - 1, -(cy - b.top) / b.height * 2 + 1);
+  ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObject(ropeGroup, true)[0];
+  if (hit || ropeOnly) return hit ? hit.point : null;
+  const nrm = camera.getWorldDirection(new THREE.Vector3());
+  return ray.ray.intersectPlane(new THREE.Plane().setFromNormalAndCoplanarPoint(nrm, controls.target), new THREE.Vector3());
+}
+function zoom(s, cx, cy) {   // scale the view about the point under the pointer
+  const d = camera.position.distanceTo(controls.target), k = Math.max(80, Math.min(6000, d * s)) / d;
+  const p = under(cx, cy) || controls.target.clone();
+  camera.position.sub(p).multiplyScalar(k).add(p);
+  controls.target.sub(p).multiplyScalar(k).add(p);
+}
+canvas.addEventListener('wheel', e => { e.preventDefault(); spin.checked = false; zoom(1 + Math.sign(e.deltaY) * 0.08, e.clientX, e.clientY); }, { passive: false });
+let pinch = 0;
+const gap = t => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY);
+canvas.addEventListener('touchstart', e => { pinch = e.touches.length === 2 ? gap(e.touches) : 0; });
+canvas.addEventListener('touchmove', e => {
+  if (e.touches.length !== 2 || !pinch) return;
+  const g = gap(e.touches);
+  if (g) zoom(pinch / g, (e.touches[0].clientX + e.touches[1].clientX) / 2, (e.touches[0].clientY + e.touches[1].clientY) / 2);
+  pinch = g;
+});
+canvas.addEventListener('touchend', () => { pinch = 0; });
+const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function glide(target, cam) {
+  const t0 = controls.target.clone(), c0 = camera.position.clone(), start = performance.now();
+  const step = t => { const k = still ? 1 : Math.min(1, (t - start) / 300), e = k * (2 - k);
+    controls.target.lerpVectors(t0, target, e); camera.position.lerpVectors(c0, cam, e);
+    if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+canvas.addEventListener('dblclick', e => {
+  spin.checked = false;
+  const p = under(e.clientX, e.clientY, true);
+  if (p) { glide(p, camera.position.clone().add(p).sub(controls.target)); return; }
+  world.rotation.set(0, 0, 0);
+  glide(new THREE.Vector3(), home.clone());     // empty space: back to the opening view
+});
+if (still) spin.checked = false;
+controls.addEventListener('start', () => { spin.checked = false; });
+function resize() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  if (canvas.width !== Math.round(w * renderer.getPixelRatio())) {
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+}
+const h0 = parseInt(location.hash.slice(1));
+show(h0 >= 0 && h0 < 256 ? h0 : 117);
+(function loop() {
+  resize();
+  if (spin.checked) world.rotation.y += 0.004;
+  controls.update();
+  renderer.render(scene, camera);
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
+"""
+
+
 def outputs():
     group_of, members, mirror, names, drawn = analyse()
     results = {
@@ -1088,6 +1543,7 @@ def outputs():
     }
     files = {f"results/{name}": data for name, data in results.items()}
     files["index.html"] = page(group_of, members, mirror, names, drawn, results)
+    files["turn.html"] = turn_page(group_of, names, drawn)
     return files
 
 

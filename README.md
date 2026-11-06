@@ -13,6 +13,8 @@ Carrick bend and its relatives.
 
 **[See all 256](https://gernreich.github.io/knot-crossings/)**: the key, the
 index checked, the groups, and every drawing redrawn with its crossings.
+**[Turn them in 3D](https://gernreich.github.io/knot-crossings/turn.html)**: any
+drawing as two ropes you can turn, move and zoom.
 
 ## The key
 
@@ -161,6 +163,26 @@ checked with SnapPy, which is not needed to run the script.
 drawings, and every named drawing's two closures. `results/knots.txt` gives
 both for every drawing.
 
+## In 3D
+
+[turn.html](https://gernreich.github.io/knot-crossings/turn.html) builds any
+of the 256 drawings as two ropes, the 1st red and the 2nd blue, following the
+key's curves. At each crossing the rope that goes over lifts toward you and the
+one that goes under drops away, as that drawing's circles say. Pick a drawing by
+number, with the arrows, or from the 3D link on any card on the main page. Three
+choices sit beside it:
+
+- **Ends:** loose, as the rope is in the hand; joined own, each rope closed on
+  itself (the link); or joined across, one rope run into the other (the knot).
+  The joining rope is grey and follows the dashed paths of *Closing the ends*.
+- **Rope:** a plain tube, or laid rope of three strands twisted right-handed.
+- **Show:** the crossing numbers of the key, and a slow spin.
+
+Drag to turn, right-drag or shift-drag to move, scroll or pinch to zoom, and
+double-click a rope to turn round that point (double-click empty space to go
+back). It is drawn with the Three library ([threejs.org](https://threejs.org/)); the page is written by `knot_crossings.py` with the
+rest.
+
 ## What is here
 
 | Path | Contents |
@@ -171,9 +193,10 @@ both for every drawing.
 | `knot_crossings.py` | the key traced, all 256 worked out, and the page drawn |
 | `results/` | the tables it writes |
 | `index.html` | the page it writes |
+| `turn.html` | the 3D view it writes |
 
 ```
-python3 knot_crossings.py           # writes results/ and index.html
+python3 knot_crossings.py           # writes results/, index.html and turn.html
 python3 knot_crossings.py --check   # exits 1 if any of them would change
 ```
 
